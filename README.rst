@@ -18,6 +18,7 @@ Quick start
     )
 
 2. Include the mongo URLconf in your project urls.py like this::
+
     import mongo.urls
     
     url(r'^mongo/', include('mongo.urls')),
