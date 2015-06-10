@@ -1,5 +1,5 @@
 from django.conf.urls import include, url
 
 urlpatterns = [
-    url(r'^get/', 'mongo.views.get_doc'),
+    url(r'^doc/(?P<doc_id>\w+)', 'mongo.views.doc'),
 ]
