@@ -16,7 +16,6 @@ def doc(request, col_id, doc_id):
     elif request.method == "POST":
         doc = json.loads(request.POST['data'])
         col.insert(doc)
-        result = dict()
         result['result'] = 0
         result['message'] = 'insert ' + doc_id + ' success'
         return HttpResponse(json.dumps(result), content_type='application/json')
