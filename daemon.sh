@@ -29,28 +29,27 @@
 ME=`readlink -f $0`
 
 ############### EDIT ME ##################
-DJANGO_PATH="/srv/django-mongo"
-DAEMON=$DJANGO_PATH/manage.py
-LOG=$DJANGO_PATH/stdout.log
+DJANGO_NAME="kkomad"
+DJANGO_PATH="/srv/kkoma"
+DJANGO_CMD=$DJANGO_PATH/manage.py
 RUN_AS=root
 SERVER_IP=0.0.0.0
-SERVER_PORT=8080
+SERVER_PORT=8888
 ############### END EDIT ME ##################
-test -x $DAEMON || exit 0
+test -x $DAEMON_CMD || exit 0
 
 do_start() {
-    echo -n "Starting iotd... "
-    #start-stop-daemon -d $DJANGO_PATH -c $RUN_AS --start --background --exec $DAEMON runserver $SERVER_IP:$SERVER_PORT > $LOG 2>&1
-    start-stop-daemon -d $DJANGO_PATH -c $RUN_AS --start --background --exec $DAEMON runserver $SERVER_IP:$SERVER_PORT
-    echo "iotd Started"
+    echo -n "Starting $DJANGO_NAME...  "
+    start-stop-daemon -d $DJANGO_PATH -c $RUN_AS --start --background --exec $DJANGO_CMD runserver $SERVER_IP:$SERVER_PORT
+    echo "Started"
 }
 
 do_stop() {
-    echo -n "Stopping iotd... "
+    echo -n "Stopping $DJANGO_NAME...  "
     for i in `ps aux | grep -i "manage.py runserver" | grep -v grep | awk '{print $2}' ` ; do
         kill -9 $i
     done
-    echo "iotd Stopped"
+    echo "Stopped"
 }
 
 do_restart() {
