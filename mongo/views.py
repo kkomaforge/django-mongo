@@ -13,19 +13,23 @@ def doc(request, col_id, doc_id):
     col = db[col_id]
 
     if request.method == "GET":
-        logger.debug("get doc %s:%s" % (col_id, doc_id))
+        logger.debug('get doc %s:%s' % (col_id, doc_id))
         doc = col.find_one({"_id": doc_id})
-        logger.debug("<- " + json.dumps(doc))
-        return HttpResponse(json.dumps(doc))
-    elif request.method == "POST":
-        logger.debug("post doc %s:%s" % (col_id, doc_id))
-        doc = json.loads(request.body)
-        logger.debug("-> " + json.dumps(doc))
-        col.insert(doc)
-        result = dict()
+        logger.debug('<- ' + json.dumps(doc))
+        result = {}
         result['result'] = 0
-        result['message'] = 'insert ' + doc_id + ' success'
-        return HttpResponse(json.dumps(result), content_type='application/json')
+        result['message'] = 'get %s success' % (doc_id)
+        result['doc'] = doc
+        return HttpResponse(json.dumps(result), content_type='application/json; charset=utf8')
+    elif request.method == "POST":
+        logger.debug('post doc %s:%s' % (col_id, doc_id))
+        doc = json.loads(request.body)
+        logger.debug('-> ' + json.dumps(doc))
+        col.insert(doc)
+        result = {}
+        result['result'] = 0
+        result['message'] = 'insert %s success' % (doc_id)
+        return HttpResponse(json.dumps(result), content_type='application/json; charset=utf8')
     else :
         logger.warn("not support method %s" % (request.method))
         return HttpResponse('not support method')
