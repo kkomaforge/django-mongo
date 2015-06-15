@@ -15,10 +15,12 @@ def doc(request, col_id, doc_id):
     if request.method == "GET":
         logger.debug("get doc %s:%s" % (col_id, doc_id))
         doc = col.find_one({"_id": doc_id})
-        return HttpResponse(doc)
+        logger.debug("<- " + json.dumps(doc))
+        return HttpResponse(json.dumps(doc))
     elif request.method == "POST":
         logger.debug("post doc %s:%s" % (col_id, doc_id))
-        doc = json.loads(request.POST['data'])
+        doc = json.loads(request.body)
+        logger.debug("-> " + json.dumps(doc))
         col.insert(doc)
         result = dict()
         result['result'] = 0
