@@ -55,6 +55,18 @@ def doc(request, col_id, doc_id):
 
 
 def query(request, col_id):
+    logger.debug('query [%s]' % (col_id))
     q = request.GET.get('q')
-    return HttpResponse('query [%s]: %s' % (col_id, q))
+    client = MongoClient('localhost', 27017)
+    db = client['kkoma']
+    col = db[col_id]
+    result = {}
+    result['result'] = 0
+    result['message'] = 'query %s success' % (q)
+    count = 0
+    for doc in col.find():
+        result['docs'].append(doc)
+        count += 1
+    result['count'] = count
+    return HttpResponse(json.dumps(result), content_type='application/json; charset=utf8')
     
