@@ -52,3 +52,9 @@ def doc(request, col_id, doc_id):
     else :
         logger.warn('not support method %s' % (request.method))
         return HttpResponse('not support method')
+
+
+def query(request, col_id):
+    q = request.GET.get('q')
+    return HttpResponse('query [%s]: %s' % (col_id, q))
+    
