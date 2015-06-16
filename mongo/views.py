@@ -12,8 +12,8 @@ def doc(request, col_id, doc_id):
     db = client['kkoma']
     col = db[col_id]
 
-    if request.method == "GET":
-        logger.debug('get doc %s:%s' % (col_id, doc_id))
+    if request.method == 'GET':
+        logger.debug('get doc [%s] %s' % (col_id, doc_id))
         doc = col.find_one({"_id": doc_id})
         logger.debug('<- ' + json.dumps(doc))
         result = {}
@@ -21,15 +21,34 @@ def doc(request, col_id, doc_id):
         result['message'] = 'get %s success' % (doc_id)
         result['doc'] = doc
         return HttpResponse(json.dumps(result), content_type='application/json; charset=utf8')
-    elif request.method == "POST":
-        logger.debug('post doc %s:%s' % (col_id, doc_id))
+    elif request.method == 'POST':
+        logger.debug('insert doc [%s] %s' % (col_id, doc_id))
         doc = json.loads(request.body)
+        doc['_id'] = doc_id
         logger.debug('-> ' + json.dumps(doc))
         col.insert(doc)
         result = {}
         result['result'] = 0
         result['message'] = 'insert %s success' % (doc_id)
         return HttpResponse(json.dumps(result), content_type='application/json; charset=utf8')
+    elif request.method == 'PUT':
+        logger.debug('update doc [%s] %s' % (col_id, doc_id))
+        doc = json.loads(request.body)
+        logger.debug('-> ' + json.dumps(doc))
+        set = {}
+        set['$set'] = doc
+        col.update({'_id':doc_id}, set, upsert=False)
+        result = {}
+        result['result'] = 0
+        result['message'] = 'update %s success' % (doc_id)
+        return HttpResponse(json.dumps(result), content_type='application/json; charset=utf8')
+    elif request.method == 'DELETE':
+        logger.debug('delete doc [%s] %s' % (col_id, doc_id))
+        col.remove({"_id":doc_id})
+        result = {}
+        result['result'] = 0
+        result['message'] = 'delete %s success' % (doc_id)
+        return HttpResponse(json.dumps(result), content_type='application/json; charset=utf8')
     else :
-        logger.warn("not support method %s" % (request.method))
+        logger.warn('not support method %s' % (request.method))
         return HttpResponse('not support method')
