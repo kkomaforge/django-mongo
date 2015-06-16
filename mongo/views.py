@@ -63,6 +63,7 @@ def query(request, col_id):
     result = {}
     result['result'] = 0
     result['message'] = 'query %s success' % (q)
+    result['docs'] = []
     count = 0
     for doc in col.find():
         result['docs'].append(doc)
