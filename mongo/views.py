@@ -66,7 +66,6 @@ def query(request, col_id):
     result['docs'] = []
     count = 0
     for doc in col.find():
-        logger.debug('-> ' + doc)
         result['docs'].append(doc)
         count += 1
     result['count'] = count
